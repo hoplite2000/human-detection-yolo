@@ -10,6 +10,11 @@ min_conf = 0.3
 nms_thresh = 0.3
 #Change this to True if you have GPU
 USE_GPU = False
+frame_width = 700
+linex1 = 0
+linex2 = frame_width
+liney1 = 150
+liney2 = 250
 
 inputfilepath = ""
 outputfilepath = ""
@@ -121,15 +126,33 @@ while True:
         break
 
     frame = cv2.flip(frame, 1)
-    frame = imutils.resize(frame, width=700)
+    frame = imutils.resize(frame, width=frame_width)
     results, start, end = detect_people(frame, net, ln, index=LABELS.index("person"))
+
+    safe = set()
     
     for (i, (prob, bbox, centroid)) in enumerate(results):
         (startX, startY, endX, endY) = bbox
         (cX, cY) = centroid
 
-        cv2.rectangle(frame, (startX, startY), (endX, endY), (0, 0, 255), 2)
-        cv2.circle(frame, (cX, cY), 5, (0, 255, 0), 1)
+        cv2.line(frame, (linex1,liney1), (linex2,liney2), (255,0,0), 1)
+        #linear algebra
+        eqn = ((liney2-liney1)/(linex2-linex1))*(endX-linex1) + liney1
+        
+        if endY <= eqn:
+            color = (0, 255, 0)
+            colorc = (0, 0, 255)
+            safe.add(i)
+        else:
+            color = (0, 0, 255)
+            colorc = (0, 255, 0)
+            #safe.add(i)
+        
+        cv2.rectangle(frame, (startX, startY), (endX, endY), color, 2)
+        cv2.circle(frame, (cX, cY), 5, colorc, 1)
+
+    text = "Safe: {}".format(len(safe))
+    cv2.putText(frame, text, (10, frame.shape[0] - 25), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
     #comment out the below line if its taking too long to process the video
     cv2.imshow("Cam", frame)
@@ -138,10 +161,10 @@ while True:
         break
 
     if outputfilepath != "" and writer is None:
-        # initialize our video writer
+        #initialize our video writer
         fourcc = cv2.VideoWriter_fourcc(*"MJPG")
         writer = cv2.VideoWriter(outputfilepath , fourcc, 25, (frame.shape[1], frame.shape[0]), True)
-        # some information on processing single frame
+        #some information on processing single frame
         if total > 0:
             elap = (end - start)
             print("> Single frame took {:.4f} seconds".format(elap))

@@ -16,5 +16,6 @@ Note:
   Higher the value of size, Lower will be the speed of video processing but accuracy will be high and perfect. But with the help of GPU, speed will be high.
   The value of size must be a multiple of 32.
   (416,416) is the suggested value.
+* New feature added: A virtual line is drawn and people crossing it are counted.
   
 
