@@ -87,9 +87,9 @@ configpath = os.path.sep.join([model_path, "yolov3.cfg"])
 print("> Loading YOLO from disk...")
 net = cv2.dnn.readNetFromDarknet(configpath, weightspath)
 
-# check if we are going to use GPU
+#check if we are going to use GPU
 if USE_GPU:
-    # set CUDA as the preferable backend and target
+    #set CUDA as the preferable backend and target
     print("> Setting preferable backend and target to CUDA...")
     net.setPreferableBackend(cv2.dnn.DNN_BACKEND_CUDA)
     net.setPreferableTarget(cv2.dnn.DNN_TARGET_CUDA)
@@ -136,9 +136,7 @@ while True:
         (cX, cY) = centroid
 
         cv2.line(frame, (linex1,liney1), (linex2,liney2), (255,0,0), 1)
-        #linear algebra
         eqn = ((liney2-liney1)/(linex2-linex1))*(endX-linex1) + liney1
-        
         if endY <= eqn:
             color = (0, 255, 0)
             colorc = (0, 0, 255)
@@ -146,13 +144,16 @@ while True:
         else:
             color = (0, 0, 255)
             colorc = (0, 255, 0)
-            #safe.add(i)
-        
         cv2.rectangle(frame, (startX, startY), (endX, endY), color, 2)
         cv2.circle(frame, (cX, cY), 5, colorc, 1)
 
-    text = "Safe: {}".format(len(safe))
-    cv2.putText(frame, text, (10, frame.shape[0] - 25), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+    counterup = len(safe)
+    counterdown = len(results)-len(safe)
+
+    text1 = "Above line: {}".format(counterup)
+    text2 = "Below line: {}".format(counterdown)
+    cv2.putText(frame, text1, (10, frame.shape[0] - 35), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 255, 0), 2)
+    cv2.putText(frame, text2, (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 2)
 
     #comment out the below line if its taking too long to process the video
     cv2.imshow("Cam", frame)
@@ -161,14 +162,18 @@ while True:
         break
 
     if outputfilepath != "" and writer is None:
-        #initialize our video writer
+        # initialize our video writer
         fourcc = cv2.VideoWriter_fourcc(*"MJPG")
         writer = cv2.VideoWriter(outputfilepath , fourcc, 25, (frame.shape[1], frame.shape[0]), True)
-        #some information on processing single frame
+        # some information on processing single frame
         if total > 0:
             elap = (end - start)
             print("> Single frame took {:.4f} seconds".format(elap))
             print("> Estimated total time to finish: {:.4f}".format(elap * total))
+
+    sys.stdout.flush()
+    sys.stdout.write("\r> Above line: {} and Below line: {} ".format(counterup, counterdown))
+    sys.stdout.flush()
 
     if writer is not None:
         writer.write(frame)

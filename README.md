@@ -18,5 +18,6 @@ Note:
   (416,416) is the suggested value.
 * New feature added in the file human_detection_virtual_line.py : A virtual line is drawn and people crossing it are counted. Execution process is the same.
   The virtual line can be set ny changing the values of liney1 and liney2.
+  There are 2 counter variables present which gets updated dynamically and displayed both in video and command prompt.
   
 
