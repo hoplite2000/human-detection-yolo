@@ -5,8 +5,8 @@ import time
 import os
 import sys
 import dlib
-from ppl_counter_utils.centroidtracker import CentroidTracker
-from ppl_counter_utils.trackableobject import TrackableObject
+from utils.centroidtracker import CentroidTracker
+from utils.trackableobject import TrackableObject
 
 model_path = "yolo-coco"
 min_conf = 0.3

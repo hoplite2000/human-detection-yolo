@@ -16,10 +16,12 @@ Note:
   Higher the value of size, Lower will be the speed of video processing but accuracy will be high and perfect. But with the help of GPU, speed will be high.
   The value of size must be a multiple of 32.
   (416,416) is the suggested value.
-* New feature added in the file human_detection_people_counter.py : A virtual line is drawn and people crossing it are counted. Execution process is the same.
+* New feature added in the file human_detection_ppl_counter.py : A virtual line is drawn and people crossing it are counted. Execution process is the same.
   There are 2 counter variables present which gets updated dynamically and displayed both in video and command prompt.
   This feature is basically the people counter.
   For proper tuning, you can change and set the upper and lower limits in line 233 and 236 according to the need.
   Additional dlib library is required for executing this module.
+* New file created and named as human_detection_ppl_counter_new.py which will only record if more then 1 person enters. 
+  Module can be fine tuned by varying consecFrames, bufSize, and line 252 in code.
   
 
