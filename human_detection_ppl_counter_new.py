@@ -18,11 +18,10 @@ USE_GPU = False
 frame_width = 700
 linex1, linex2 = 0, frame_width
 liney1, liney2 = None, None
-bufSize = 64
+bufSize = 128
 totalUptemp = 0
 totalDowntemp = 0
-#initialize the consecutive number of frames that have *not* contained any action
-consecFrames = 10
+consecFrames = 0
 
 inputfilepath = ""
 outputfilepath = ""
@@ -102,7 +101,6 @@ while True:
     # frame = cv2.flip(frame, 1)
     frame = imutils.resize(frame, width=700)
     rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-    updateConsecFrames = True
 
     if W is None or H is None:
         (H, W) = frame.shape[:2]
@@ -243,30 +241,29 @@ while True:
         trackableObjects[objectID] = to
 
     #recordings
-    if (totalUptemp>1 or totalDowntemp>1) and not kcw.recording:
+    if ((totalUptemp>1 or totalDowntemp>1) and (totalUp>1 or totalDown>1)) and not kcw.recording:
         if not kcw.recording:
             consecFrames = 0
             timestamp = datetime.datetime.now()
             p = "{}/{}.avi".format(outputfilepath, timestamp.strftime("%Y%m%d-%H%M%S"))
             kcw.start(p, cv2.VideoWriter_fourcc(*"MJPG"), 25)
-    elif consecFrames % 32 != 0:
-        None
     else:
-        totalUptemp = 0
-        totalDowntemp = 0
+        None
+        
 
-    text1 = "Above line (pilferage): {}".format((totalUptemp-1) if (totalUptemp-1)>0 else 0)
-    text2 = "Below line (pilferage): {}".format((totalDowntemp-1) if (totalDowntemp-1)>0 else 0)
+    text1 = "Above line (intruders): {}".format((totalUptemp-1) if (totalUptemp-1)>0 else 0)
+    text2 = "Below line (intruders): {}".format((totalDowntemp-1) if (totalDowntemp-1)>0 else 0)
     cv2.putText(frame, text1, (10, frame.shape[0] - 35), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 255, 0), 2)
     cv2.putText(frame, text2, (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 2)
 
-    if updateConsecFrames:
-        consecFrames += 1
+    consecFrames += 1
 
     kcw.update(frame)
 
     if kcw.recording and consecFrames == bufSize:
         kcw.finish()
+        totalUptemp = 0
+        totalDowntemp = 0
 
     # show the output frame
     cv2.imshow("Cam", frame)

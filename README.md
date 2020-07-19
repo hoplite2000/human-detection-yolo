@@ -22,6 +22,8 @@ Note:
   For proper tuning, you can change and set the upper and lower limits in line 233 and 236 according to the need.
   Additional dlib library is required for executing this module.
 * New file created and named as human_detection_ppl_counter_new.py which will only record if more then 1 person enters. 
-  Module can be fine tuned by varying consecFrames, bufSize, and line 252 in code.
+  Module can be fine tuned by varying bufSize.
+  Only the count of intruders is displayed on the video and the actual people count will be displayed on the command prompt.
+  The extension for now is .avi. This can be changed to .mp4 but some error will be displayed on the command prompt but still the video will be recorded. Changes can be made in line 248
   
 
