@@ -24,6 +24,18 @@ Note:
 * New file created and named as human_detection_ppl_counter_new.py which will only record if more then 1 person enters. 
   Module can be fine tuned by varying bufSize.
   Only the count of intruders is displayed on the video and the actual people count will be displayed on the command prompt.
-  The extension for now is .avi. This can be changed to .mp4 but some error will be displayed on the command prompt but still the video will be recorded. Changes can be made in line 248
+  The extension for now is .avi. This can be changed to .mp4 but some error will be displayed on the command prompt but still the video will be recorded. Changes can be made in line 248.
+* If you want to apply this as a vertical line, then:
+  1. Changes should be made in line 228 and 229. we used c[1] which calculates up and down motion, i,e.. y-axis. If we change to c[0] it'll correspond to x-axis and check for left and right motion.
+  2. The co-ordinates of the points in line 216 must also be changed. It will result in vertical line. For eg: "cv2.line(frame, (W//2, 0), (W//2, H), (255, 0, 0), 2)".
+  3. Changes must be made in line 233 and 237. Should replace H by W (for motion corresponding to x-axis) and centroid[1] must be changed to centroid[0] in both the lines also.
+  4. To make changes in color line 205 and 206 must be changed. 
+  	eqn = (endY - liney1) / ((liney2 - liney1) / (linex2 - linex1)) + linex1
+        if endX >= eqn:
+     also change line 19, 20 and 108 to
+     	(line 19)  linex1, linex2 = None, None
+	(line 20)  liney1, liney2 = 0, frame_height (you can set the frame height).
+	(line 108) linex1, linex2 = W // 2, W // 2
+  5. Below line is nothing but left side of the line and above line is on the right side.
   
 
