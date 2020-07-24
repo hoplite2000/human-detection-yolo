@@ -37,5 +37,6 @@ Note:
 	(line 20)  liney1, liney2 = 0, frame_height (you can set the frame height).
 	(line 108) linex1, linex2 = W // 2, W // 2
   5. Below line is nothing but left side of the line and above line is on the right side.
+* There is a new file named new.py which has a variable record. Its by default False. It should be set to True when biometrics gets punched.
   
 
